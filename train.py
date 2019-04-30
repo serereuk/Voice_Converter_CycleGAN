@@ -109,8 +109,10 @@ def train(train_A_dir, train_B_dir, model_dir, model_name, random_seed, validati
             if i % 50 == 0:
                 #print('Iteration: %d, Generator Loss : %f, Discriminator Loss : %f' % (num_iterations, generator_loss, discriminator_loss))
                 print('Iteration: {:07d}, Generator Learning Rate: {:.7f}, Discriminator Learning Rate: {:.7f}, Generator Loss : {:.3f}, Discriminator Loss : {:.3f}'.format(num_iterations, generator_learning_rate, discriminator_learning_rate, generator_loss, discriminator_loss))
-
-        model.save(directory = model_dir, filename = model_name)
+                
+        if epoch % 100 == 0:
+            print('model saved')
+            model.save(directory = model_dir, filename = model_name)
 
         end_time_epoch = time.time()
         time_elapsed_epoch = end_time_epoch - start_time_epoch

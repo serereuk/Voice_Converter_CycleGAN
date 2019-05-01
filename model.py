@@ -6,7 +6,7 @@ from datetime import datetime
 
 class CycleGAN(object):
 
-    def __init__(self, num_features, discriminator = discriminator, generator = generator_gatedcnn, mode = 'train', log_dir = './log'):
+    def __init__(self, num_features, discriminator = discriminator, generator = generator_gatedcnn, mode = 'train', log_dir = './log', bring):
 
         self.num_features = num_features
         self.input_shape = [None, num_features, None] # [batch_size, num_features, num_frames]
@@ -21,6 +21,9 @@ class CycleGAN(object):
         self.saver = tf.train.Saver()
         self.sess = tf.Session()
         self.sess.run(tf.global_variables_initializer())
+        
+        if bring:
+            self.load('/gdrive/My Drive/model/sf1_tm1.ckpt')
 
         if self.mode == 'train':
             self.train_step = 0

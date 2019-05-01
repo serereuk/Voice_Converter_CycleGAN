@@ -26,10 +26,9 @@ def train(train_A_dir, train_B_dir, model_dir, model_name, random_seed, validati
     lambda_identity = 5
 
     print('Preprocessing Data...')
+    start_time = time.time()
     
     if not os.path.exists(model_dir):
-
-        start_time = time.time()
 
         wavs_A = load_wavs(wav_dir = train_A_dir, sr = sampling_rate)
         wavs_B = load_wavs(wav_dir = train_B_dir, sr = sampling_rate)

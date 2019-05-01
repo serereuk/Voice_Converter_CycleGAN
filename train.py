@@ -26,35 +26,43 @@ def train(train_A_dir, train_B_dir, model_dir, model_name, random_seed, validati
     lambda_identity = 5
 
     print('Preprocessing Data...')
+    
+    if not os.path.exists(model_dir):
 
-    start_time = time.time()
+        start_time = time.time()
 
-    wavs_A = load_wavs(wav_dir = train_A_dir, sr = sampling_rate)
-    wavs_B = load_wavs(wav_dir = train_B_dir, sr = sampling_rate)
+        wavs_A = load_wavs(wav_dir = train_A_dir, sr = sampling_rate)
+        wavs_B = load_wavs(wav_dir = train_B_dir, sr = sampling_rate)
 
-    f0s_A, timeaxes_A, sps_A, aps_A, coded_sps_A = world_encode_data(wavs = wavs_A, fs = sampling_rate, frame_period = frame_period, coded_dim = num_mcep)
-    f0s_B, timeaxes_B, sps_B, aps_B, coded_sps_B = world_encode_data(wavs = wavs_B, fs = sampling_rate, frame_period = frame_period, coded_dim = num_mcep)
+        f0s_A, timeaxes_A, sps_A, aps_A, coded_sps_A = world_encode_data(wavs = wavs_A, fs = sampling_rate, frame_period = frame_period, coded_dim = num_mcep)
+        f0s_B, timeaxes_B, sps_B, aps_B, coded_sps_B = world_encode_data(wavs = wavs_B, fs = sampling_rate, frame_period = frame_period, coded_dim = num_mcep)
 
-    log_f0s_mean_A, log_f0s_std_A = logf0_statistics(f0s_A)
-    log_f0s_mean_B, log_f0s_std_B = logf0_statistics(f0s_B)
+        log_f0s_mean_A, log_f0s_std_A = logf0_statistics(f0s_A)
+        log_f0s_mean_B, log_f0s_std_B = logf0_statistics(f0s_B)
 
-    print('Log Pitch A')
-    print('Mean: %f, Std: %f' %(log_f0s_mean_A, log_f0s_std_A))
-    print('Log Pitch B')
-    print('Mean: %f, Std: %f' %(log_f0s_mean_B, log_f0s_std_B))
+        print('Log Pitch A')    
+        print('Mean: %f, Std: %f' %(log_f0s_mean_A, log_f0s_std_A))
+        print('Log Pitch B')
+        print('Mean: %f, Std: %f' %(log_f0s_mean_B, log_f0s_std_B))
 
 
-    coded_sps_A_transposed = transpose_in_list(lst = coded_sps_A)
-    coded_sps_B_transposed = transpose_in_list(lst = coded_sps_B)
+        coded_sps_A_transposed = transpose_in_list(lst = coded_sps_A)
+        coded_sps_B_transposed = transpose_in_list(lst = coded_sps_B)
 
-    coded_sps_A_norm, coded_sps_A_mean, coded_sps_A_std = coded_sps_normalization_fit_transoform(coded_sps = coded_sps_A_transposed)
-    print("Input data fixed.")
-    coded_sps_B_norm, coded_sps_B_mean, coded_sps_B_std = coded_sps_normalization_fit_transoform(coded_sps = coded_sps_B_transposed)
+        coded_sps_A_norm, coded_sps_A_mean, coded_sps_A_std = coded_sps_normalization_fit_transoform(coded_sps = coded_sps_A_transposed)
+        print("Input data fixed.")
+        coded_sps_B_norm, coded_sps_B_mean, coded_sps_B_std = coded_sps_normalization_fit_transoform(coded_sps = coded_sps_B_transposed)
 
     if not os.path.exists(model_dir):
         os.makedirs(model_dir)
-    np.savez(os.path.join(model_dir, 'logf0s_normalization.npz'), mean_A = log_f0s_mean_A, std_A = log_f0s_std_A, mean_B = log_f0s_mean_B, std_B = log_f0s_std_B)
-    np.savez(os.path.join(model_dir, 'mcep_normalization.npz'), mean_A = coded_sps_A_mean, std_A = coded_sps_A_std, mean_B = coded_sps_B_mean, std_B = coded_sps_B_std)
+        np.savez(os.path.join(model_dir, 'logf0s_normalization.npz'), mean_A = log_f0s_mean_A, std_A = log_f0s_std_A, mean_B = log_f0s_mean_B, std_B = log_f0s_std_B)
+        np.savez(os.path.join(model_dir, 'mcep_normalization.npz'), mean_A = coded_sps_A_mean, std_A = coded_sps_A_std, mean_B = coded_sps_B_mean, std_B = coded_sps_B_std)
+    
+    log_f0s_mean_A, log_f0s_std_A, log_f0s_mean_B, log_f0s_std_B= np.load(os.path.join(model_dir, 'logf0s_normalization.npz'))
+    coded_sps_A_mean, coded_sps_A_std, coded_sps_B_mean, coded_sps_B_std = np.load(os.path.join(model_dir, 'mcep_normalization.npz'))
+    
+    
+       
 
     if validation_A_dir is not None:
         validation_A_output_dir = os.path.join(output_dir, 'converted_A')

@@ -6,7 +6,7 @@ from datetime import datetime
 
 class CycleGAN(object):
 
-    def __init__(self, num_features, discriminator = discriminator, generator = generator_gatedcnn, mode = 'train', log_dir = './log', bring):
+    def __init__(self, num_features, bring,discriminator = discriminator, generator = generator_gatedcnn, mode = 'train', log_dir = './log'):
 
         self.num_features = num_features
         self.input_shape = [None, num_features, None] # [batch_size, num_features, num_frames]

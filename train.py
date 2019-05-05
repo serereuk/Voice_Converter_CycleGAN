@@ -14,9 +14,9 @@ def train(train_A_dir, train_B_dir, model_dir, model_name, random_seed, validati
 
     num_epochs = 5000
     mini_batch_size = 1 # mini_batch_size = 1 is better
-    generator_learning_rate = 0.002
+    generator_learning_rate = 0.0004
     generator_learning_rate_decay = generator_learning_rate / 200000
-    discriminator_learning_rate = 0.0001
+    discriminator_learning_rate = 0.0002
     discriminator_learning_rate_decay = discriminator_learning_rate / 200000
     sampling_rate = 16000
     num_mcep = 24

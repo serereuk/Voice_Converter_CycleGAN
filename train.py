@@ -21,7 +21,7 @@ def train(train_A_dir, train_B_dir, model_dir, model_name, random_seed, validati
     sampling_rate = 16000
     num_mcep = 24
     frame_period = 5.0
-    n_frames = 128
+    n_frames = 64
     lambda_cycle = 10
     lambda_identity = 5
 

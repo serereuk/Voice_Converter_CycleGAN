@@ -77,7 +77,7 @@ def train(train_A_dir, train_B_dir, model_dir, model_name, random_seed, validati
 
     print('Time Elapsed for Data Preprocessing: %02d:%02d:%02d' % (time_elapsed // 3600, (time_elapsed % 3600 // 60), (time_elapsed % 60 // 1)))
 
-    model = CycleGAN(num_features = num_mcep, bring= True)
+    model = CycleGAN(num_features = num_mcep, bring=False)
 
     for epoch in range(num_epochs):
         print('Epoch: %d' % epoch)

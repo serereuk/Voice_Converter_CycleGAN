@@ -45,6 +45,10 @@ def train(train_A_dir, train_B_dir, model_dir, model_name, random_seed, validati
 
     coded_sps_A_transposed = transpose_in_list(lst = coded_sps_A)
     coded_sps_B_transposed = transpose_in_list(lst = coded_sps_B)
+    
+    coded_sps_A_norm, coded_sps_A_mean, coded_sps_A_std = coded_sps_normalization_fit_transoform(coded_sps = coded_sps_A_transposed)
+    print("Input data fixed.")
+    coded_sps_B_norm, coded_sps_B_mean, coded_sps_B_std = coded_sps_normalization_fit_transoform(coded_sps = coded_sps_B_transposed)
 
         
     
@@ -55,9 +59,7 @@ def train(train_A_dir, train_B_dir, model_dir, model_name, random_seed, validati
         np.saves(os.path.join(model_dir, 'Atr.npz'), coded_sps_A_transposed=coded_sps_A_transposed)
         np.saves(os.path.join(model_dir, 'Btr.npz'), coded_sps_B_transposed=coded_sps_B_transposed)
     
-    coded_sps_A_norm, coded_sps_A_mean, coded_sps_A_std = coded_sps_normalization_fit_transoform(coded_sps = coded_sps_A_transposed)
-    print("Input data fixed.")
-    coded_sps_B_norm, coded_sps_B_mean, coded_sps_B_std = coded_sps_normalization_fit_transoform(coded_sps = coded_sps_B_transposed)
+    
        
 
     if validation_A_dir is not None:

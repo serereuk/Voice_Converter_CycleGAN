@@ -56,9 +56,7 @@ def train(train_A_dir, train_B_dir, model_dir, model_name, random_seed, validati
         #os.makedirs(model_dir)
         np.savez(os.path.join(model_dir, 'logf0s_normalization.npz'), mean_A = log_f0s_mean_A, std_A = log_f0s_std_A, mean_B = log_f0s_mean_B, std_B = log_f0s_std_B)
         np.savez(os.path.join(model_dir, 'mcep_normalization.npz'), mean_A = coded_sps_A_mean, std_A = coded_sps_A_std, mean_B = coded_sps_B_mean, std_B = coded_sps_B_std)
-        np.savez(os.path.join(model_dir, 'Atr.npz'), coded_sps_A_transposed=coded_sps_A_transposed)
-        np.savez(os.path.join(model_dir, 'Btr.npz'), coded_sps_B_transposed=coded_sps_B_transposed)
-    
+        
     
        
 

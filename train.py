@@ -28,36 +28,44 @@ def train(train_A_dir, train_B_dir, model_dir, model_name, random_seed, validati
     print('Preprocessing Data...')
     start_time = time.time()
     
+    if not os.path.exists(model_dir):
+        wavs_A = load_wavs(wav_dir = train_A_dir, sr = sampling_rate)
+        wavs_B = load_wavs(wav_dir = train_B_dir, sr = sampling_rate)
+
+        f0s_A, timeaxes_A, sps_A, aps_A, coded_sps_A = world_encode_data(wavs = wavs_A, fs = sampling_rate, frame_period = frame_period, coded_dim = num_mcep)
+        f0s_B, timeaxes_B, sps_B, aps_B, coded_sps_B = world_encode_data(wavs = wavs_B, fs = sampling_rate, frame_period = frame_period, coded_dim = num_mcep)
+
+        log_f0s_mean_A, log_f0s_std_A = logf0_statistics(f0s_A)
+        log_f0s_mean_B, log_f0s_std_B = logf0_statistics(f0s_B)
+
+        print('Log Pitch A')    
+        print('Mean: %f, Std: %f' %(log_f0s_mean_A, log_f0s_std_A))
+        print('Log Pitch B')
+        print('Mean: %f, Std: %f' %(log_f0s_mean_B, log_f0s_std_B))
+
+
+        coded_sps_A_transposed = transpose_in_list(lst = coded_sps_A)
+        coded_sps_B_transposed = transpose_in_list(lst = coded_sps_B)
+
+        
     
-
-    wavs_A = load_wavs(wav_dir = train_A_dir, sr = sampling_rate)
-    wavs_B = load_wavs(wav_dir = train_B_dir, sr = sampling_rate)
-
-    f0s_A, timeaxes_A, sps_A, aps_A, coded_sps_A = world_encode_data(wavs = wavs_A, fs = sampling_rate, frame_period = frame_period, coded_dim = num_mcep)
-    f0s_B, timeaxes_B, sps_B, aps_B, coded_sps_B = world_encode_data(wavs = wavs_B, fs = sampling_rate, frame_period = frame_period, coded_dim = num_mcep)
-
-    log_f0s_mean_A, log_f0s_std_A = logf0_statistics(f0s_A)
-    log_f0s_mean_B, log_f0s_std_B = logf0_statistics(f0s_B)
-
-    print('Log Pitch A')    
-    print('Mean: %f, Std: %f' %(log_f0s_mean_A, log_f0s_std_A))
-    print('Log Pitch B')
-    print('Mean: %f, Std: %f' %(log_f0s_mean_B, log_f0s_std_B))
-
-
-    coded_sps_A_transposed = transpose_in_list(lst = coded_sps_A)
-    coded_sps_B_transposed = transpose_in_list(lst = coded_sps_B)
-
-    coded_sps_A_norm, coded_sps_A_mean, coded_sps_A_std = coded_sps_normalization_fit_transoform(coded_sps = coded_sps_A_transposed)
-    print("Input data fixed.")
-    coded_sps_B_norm, coded_sps_B_mean, coded_sps_B_std = coded_sps_normalization_fit_transoform(coded_sps = coded_sps_B_transposed)
-
+    if os.path.exsits(model_dir):
+        a = np.load(os.path.join(model_dir, 'Atr.npz'))
+        b = np.load(os.path.join(model_dir, 'Btr.npz'))
+        coded_sps_A_transposed = a['coded_sps_A_transposed']
+        coded_sps_B_transposed = b['coded_sps_B_transposed']
+        
+    
     if not os.path.exists(model_dir):
         os.makedirs(model_dir)
         np.savez(os.path.join(model_dir, 'logf0s_normalization.npz'), mean_A = log_f0s_mean_A, std_A = log_f0s_std_A, mean_B = log_f0s_mean_B, std_B = log_f0s_std_B)
         np.savez(os.path.join(model_dir, 'mcep_normalization.npz'), mean_A = coded_sps_A_mean, std_A = coded_sps_A_std, mean_B = coded_sps_B_mean, std_B = coded_sps_B_std)
+        np.saves(os.path.join(model_dir, 'Atr.npz'), coded_sps_A_transposed=coded_sps_A_transposed)
+        np.saves(os.path.join(model_dir, 'Btr.npz'), coded_sps_B_transposed=coded_sps_B_transposed)
     
-    
+    coded_sps_A_norm, coded_sps_A_mean, coded_sps_A_std = coded_sps_normalization_fit_transoform(coded_sps = coded_sps_A_transposed)
+    print("Input data fixed.")
+    coded_sps_B_norm, coded_sps_B_mean, coded_sps_B_std = coded_sps_normalization_fit_transoform(coded_sps = coded_sps_B_transposed)
        
 
     if validation_A_dir is not None:

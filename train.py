@@ -135,9 +135,9 @@ def train(train_A_dir, train_B_dir, model_dir, model_name, random_seed, validati
                     coded_sp = world_encode_spectral_envelop(sp = sp, fs = sampling_rate, dim = num_mcep)
                     coded_sp_transposed = coded_sp.T
                     coded_sp_norm = (coded_sp_transposed - coded_sps_A_mean) / coded_sps_A_std
+                    coded_sp_converted_norm = model.test(inputs = np.array([coded_sp_norm]), direction = 'A2B')[0]
                     if coded_sp_converted_norm.shape[1] > len(f0):
                         coded_sp_converted_norm = coded_sp_converted_norm[:, :-1]
-                    coded_sp_converted_norm = model.test(inputs = np.array([coded_sp_norm]), direction = 'A2B')[0]
                     coded_sp_converted = coded_sp_converted_norm * coded_sps_B_std + coded_sps_B_mean
                     coded_sp_converted = coded_sp_converted.T
                     coded_sp_converted = np.ascontiguousarray(coded_sp_converted)

@@ -23,7 +23,7 @@ class CycleGAN(object):
         self.sess.run(tf.global_variables_initializer())
         
         if bring:
-            self.load('/gdrive/My Drive/model/ko_IU.ckpt')
+            self.load('/gdrive/My Drive/model2/ko_SON.ckpt')
 
         if self.mode == 'train':
             self.train_step = 0

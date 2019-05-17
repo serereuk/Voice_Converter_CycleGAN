@@ -11,7 +11,7 @@ def conversion(model_dir, model_name, data_dir, conversion_direction, output_dir
     sampling_rate = 44100
     frame_period = 5.0
 
-    model = CycleGAN(num_features = num_features, mode = 'test')
+    model = CycleGAN(num_features = num_features,bring = True, mode = 'test')
 
     model.load(filepath = os.path.join(model_dir, model_name))
 
